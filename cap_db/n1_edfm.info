@@ -1,0 +1,30 @@
+Source: record capslpdb/n1.edf  Start: [22:06:03.000 01/01/2009]
+val has 21 rows (signals) and 1000000 columns (samples/signal)
+Duration:     0:03
+Sampling frequency: 512 Hz  Sampling interval: 0.001953125 sec
+Row	Signal	Gain	Base	Units
+1	ROC-LOC	32.7583620819	0	uV
+2	LOC-ROC	32.7583620819	0	uV
+3	F2-F4	32.76	0	uV
+4	F4-C4	32.76	0	uV
+5	C4-P4	32.76	0	uV
+6	P4-O2	32.76	0	uV
+7	F1-F3	32.76	0	uV
+8	F3-C3	32.76	0	uV
+9	C3-P3	32.76	0	uV
+10	P3-O1	32.76	0	uV
+11	C4-A1	32.76	0	uV
+12	EMG1-EMG2	32.7625	0	uV
+13	ECG1-ECG2	-32.766	-1	uV
+14	TERMISTORE	-32.7625	0	uV
+15	TORACE	6559.90990991	-1	mV
+16	ADDOME	6553	0	mV
+17	Dx1-DX2	32.766	-1	uV
+18	SX1-SX2	32.766	-1	uV
+19	Posizione	1	-2	nd
+20	HR	327.675	-32768	BPM
+21	SpO2	655.35	-32768	%
+
+To convert from raw units to the physical units shown
+above, call the 'rdmat.m' function from the wfdb-matlab
+toolbox: https://physionet.org/physiotools/matlab/wfdb-app-matlab/
