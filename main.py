@@ -2,6 +2,7 @@ import time
 import numpy as np
 from scipy.io import loadmat
 from sklearn.preprocessing import normalize
+from sklearn.metrics import cohen_kappa_score
 from keras.models import Model, load_model
 from keras.layers import Input, LeakyReLU, Dense, Dropout, Conv1D, MaxPool1D, \
                          GlobalAvgPool1D, Flatten, BatchNormalization, \
@@ -13,8 +14,8 @@ from keras.utils import to_categorical
 
 # Parameters
 NUM_EPOCHS = 50
-BATCH_SIZE = 10
-LEARNING_RATE = 0.0025
+BATCH_SIZE = 5
+LEARNING_RATE = 0.001
 ALPHA = 0.05
 
 def prepare_data(blocks=2):
@@ -66,17 +67,13 @@ def network(input_shape):
     """
     Network Architecture
     """
-    # Auxiliaries
-    beta_constraint = MinMaxNorm(min_value=0.0, max_value=0.0)
-    gamma_constraint = MinMaxNorm(min_value=1.0, max_value=1.0)
     # Normalization
     input = Input(shape=input_shape)
-    norm = BatchNormalization(input_shape=input_shape, beta_constraint=beta_constraint,
-                              gamma_constraint=gamma_constraint)(input)
+    norm = BatchNormalization(input_shape=input_shape, center=False, scale=True)(input)
     # Convolution Branch 1
-    a = Conv1D(filters=32, kernel_size=15)(norm)
+    a = Conv1D(filters=32, kernel_size=20)(norm)
     a = LeakyReLU(alpha=ALPHA)(a)
-    a = Conv1D(filters=32, kernel_size=15)(a)
+    a = Conv1D(filters=32, kernel_size=20)(a)
     a = LeakyReLU(alpha=ALPHA)(a)
     a = MaxPool1D(pool_size=2)(a)
     a = Dropout(0.2)(a)
