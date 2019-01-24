@@ -4,7 +4,7 @@ from keras.models import load_model, Model
 from sklearn.metrics import cohen_kappa_score
 from main import prepare_data, BATCH_SIZE
 
-TRIALS = 20
+TRIALS = 10
 
 print("\nStarting test (" + str(TRIALS) + " trials)\n")
 
@@ -51,4 +51,4 @@ print("Mean Accuracy: ", avg_acc)
 print("\nCohen's Kappa Score")
 print("Best k: ", best_kappa)
 print("Worst k: ", worst_kappa)
-print("\nfinished in " + str(time.time()-start) + " seconds")
+print("\nfinished in " + str(int(time.time()-start)) + " seconds")

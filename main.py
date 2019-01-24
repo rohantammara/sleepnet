@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
     train(x,y,xt,yt)
 
-    print("\nFinished training in " + str(time.time()-start) + " seconds.")
+    print("\nFinished training in " + str(int(time.time()-start)) + " seconds.")
 
     classifier = load_model("saved_models/psg_model_2.h5")
 
