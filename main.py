@@ -25,22 +25,22 @@ def prepare_data():
     # Load EEG signals
     X = np.hstack((np.array(loadmat('psg_db/slp01am.mat')['val'])[2][:997500],
                    np.array(loadmat('psg_db/slp01bm.mat')['val'])[2][:997500],
-                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][:997500],
-                   np.array(loadmat('psg_db/slp02bm.mat')['val'])[2][:997500],
-                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][:37500],
-                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][52500:225000],
-                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][232500:675000],
-                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][690000:705000],
-                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][712500:840000],
-                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][847500:885000],
-                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][892500:997500],
-                   np.array(loadmat('psg_db/slp04m.mat')['val'])[2][:697500],
-                   np.array(loadmat('psg_db/slp04m.mat')['val'])[2][705000:997500],
-                   np.array(loadmat('psg_db/slp14m.mat')['val'])[2][45000:997500],
+                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][:37500],
+                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][52500:225000],
+                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][232500:675000],
+                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][690000:705000],
+                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][712500:840000],
+                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][847500:885000],
+                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][892500:997500],
+                   np.array(loadmat('psg_db/slp02bm.mat')['val'])[2][:697500],
+                   np.array(loadmat('psg_db/slp02bm.mat')['val'])[2][705000:997500],
+                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp04m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp14m.mat')['val'])[2][45000:540000],
+                   np.array(loadmat('psg_db/slp14m.mat')['val'])[2][547500:997500],
                    np.array(loadmat('psg_db/slp16m.mat')['val'])[2][195000:997500],
-                   np.array(loadmat('psg_db/slp32m.mat')['val'])[2][:540000],
-                   np.array(loadmat('psg_db/slp32m.mat')['val'])[2][547500:997500],
-                   np.array(loadmat('psg_db/slp37m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp32m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp37m.mat')['val'])[2][15000:997500],
                    np.array(loadmat('psg_db/slp41m.mat')['val'])[2][:997500],
                    np.array(loadmat('psg_db/slp45m.mat')['val'])[2][:997500],
                    np.array(loadmat('psg_db/slp48m.mat')['val'])[2][:997500],
@@ -49,9 +49,9 @@ def prepare_data():
                    np.array(loadmat('psg_db/slp61m.mat')['val'])[2][150000:997500],
                    np.array(loadmat('psg_db/slp66m.mat')['val'])[2][:997500],
                    np.array(loadmat('psg_db/slp67xm.mat')['val'])[2][:997500]))
-    M = 2313
-    X = np.reshape(X, (M, 7500))
-
+    #M = 2313
+    #X = np.reshape(X, (M, 7500))
+    print(len(X)/7500)
     # Load annotations as labels
     annotations = open('psg_db/annotations.txt').readlines()
     Y = []
