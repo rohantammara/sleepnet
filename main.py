@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
     print("\nFinished training in " + str(int(time.time()-start)) + " seconds.")
 
-    classifier = load_model("saved_models/psg_model_2.h5")
+    classifier = load_model("saved_models/psg_model.h5")
 
     print("\nFinal evaluation over training samples")
     scores_train = classifier.evaluate(x, y, BATCH_SIZE)
