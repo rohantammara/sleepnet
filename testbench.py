@@ -14,8 +14,6 @@ avg_loss = 0
 avg_acc = 0
 best_loss = 0
 best_acc = 0
-best_kappa = 0
-worst_kappa = 1
 
 x,y,xt,yt = prepare_data()
 
@@ -37,11 +35,6 @@ for _ in range(TRIALS):
 
     kappa = cohen_kappa_score(y_test, y_pred)
 
-    if kappa > best_kappa:
-        best_kappa = kappa
-    if kappa < worst_kappa:
-        worst_kappa = kappa
-
 avg_loss = avg_loss/TRIALS
 avg_acc = avg_acc/TRIALS
 
@@ -49,7 +42,5 @@ print("\nBest Loss: ", best_loss)
 print("Best Accuracy: ", best_acc)
 print("\nMean Loss: ", avg_loss)
 print("Mean Accuracy: ", avg_acc)
-print("\nCohen's Kappa Score")
-print("Best: ", best_kappa)
-print("Worst: ", worst_kappa)
+print("\nCohen's Kappa Score: ", kappa)
 print("\nfinished in " + str(time.time()-start) + " seconds")
