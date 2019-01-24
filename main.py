@@ -43,15 +43,16 @@ def prepare_data():
                    np.array(loadmat('psg_db/slp37m.mat')['val'])[2][15000:997500],
                    np.array(loadmat('psg_db/slp41m.mat')['val'])[2][:997500],
                    np.array(loadmat('psg_db/slp45m.mat')['val'])[2][:997500],
-                   np.array(loadmat('psg_db/slp48m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp48m.mat')['val'])[2][:465000],
+                   np.array(loadmat('psg_db/slp48m.mat')['val'])[2][472500:997500],
                    np.array(loadmat('psg_db/slp59m.mat')['val'])[2][165000:997500],
                    np.array(loadmat('psg_db/slp60m.mat')['val'])[2][:997500],
                    np.array(loadmat('psg_db/slp61m.mat')['val'])[2][150000:997500],
                    np.array(loadmat('psg_db/slp66m.mat')['val'])[2][:997500],
                    np.array(loadmat('psg_db/slp67xm.mat')['val'])[2][:997500]))
-    #M = 2313
-    #X = np.reshape(X, (M, 7500))
-    print(len(X)/7500)
+    M = 2307
+    X = np.reshape(X, (M, 7500))
+
     # Load annotations as labels
     annotations = open('psg_db/annotations.txt').readlines()
     Y = []
@@ -115,7 +116,7 @@ def network(input_shape):
     x = Concatenate(axis=1)([a,b,c])
     x = GlobalAvgPool1D()(x)
     # Output
-    output = Dense(5, activation='softmax')(x)
+    output = Dense(6, activation='softmax')(x)
 
     model = Model(inputs=[input], outputs=[output])
 
@@ -141,7 +142,7 @@ if __name__ == "__main__":
     start = time.time()
 
     x,y,xt,yt = prepare_data()
-"""
+
     train(x,y,xt,yt)
 
     print("\nFinished training in " + str(int(time.time()-start)) + " seconds.")
@@ -164,4 +165,3 @@ if __name__ == "__main__":
     scores_full = classifier.evaluate(X, Y, BATCH_SIZE)
     print("Loss: ", scores_full[0])
     print("Accuracy: ", scores_full[1])
-"""
