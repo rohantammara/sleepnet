@@ -18,18 +18,38 @@ BATCH_SIZE = 5
 LEARNING_RATE = 0.001
 ALPHA = 0.05
 
-def prepare_data(blocks=2):
+def prepare_data():
     """
     Helper function to prepare and split data
     """
     # Load EEG signals
-    if  blocks == 2:
-        X = np.hstack((np.array(loadmat('psg_db/slp01am.mat')['val'])[2][:997500],
-                       np.array(loadmat('psg_db/slp01bm.mat')['val'])[2][:997500]))
-        M = 266
-    elif blocks == 1:
-        X = np.array(loadmat('psg_db/slp01am.mat')['val'])[2][:997500]
-        M = 133
+    X = np.hstack((np.array(loadmat('psg_db/slp01am.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp01bm.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp02am.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp02bm.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][:37500],
+                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][52500:225000],
+                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][232500:675000],
+                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][690000:705000],
+                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][712500:840000],
+                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][847500:885000],
+                   np.array(loadmat('psg_db/slp03m.mat')['val'])[2][892500:997500],
+                   np.array(loadmat('psg_db/slp04m.mat')['val'])[2][:697500],
+                   np.array(loadmat('psg_db/slp04m.mat')['val'])[2][705000:997500],
+                   np.array(loadmat('psg_db/slp14m.mat')['val'])[2][45000:997500],
+                   np.array(loadmat('psg_db/slp16m.mat')['val'])[2][195000:997500],
+                   np.array(loadmat('psg_db/slp32m.mat')['val'])[2][:540000],
+                   np.array(loadmat('psg_db/slp32m.mat')['val'])[2][547500:997500],
+                   np.array(loadmat('psg_db/slp37m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp41m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp45m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp48m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp59m.mat')['val'])[2][165000:997500],
+                   np.array(loadmat('psg_db/slp60m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp61m.mat')['val'])[2][150000:997500],
+                   np.array(loadmat('psg_db/slp66m.mat')['val'])[2][:997500],
+                   np.array(loadmat('psg_db/slp67xm.mat')['val'])[2][:997500]))
+    M = 2313
     X = np.reshape(X, (M, 7500))
 
     # Load annotations as labels
@@ -120,8 +140,8 @@ def train(x_train, y_train, x_test, y_test):
 if __name__ == "__main__":
     start = time.time()
 
-    x,y,xt,yt = prepare_data(blocks=2)
-
+    x,y,xt,yt = prepare_data()
+"""
     train(x,y,xt,yt)
 
     print("\nFinished training in " + str(int(time.time()-start)) + " seconds.")
@@ -144,3 +164,4 @@ if __name__ == "__main__":
     scores_full = classifier.evaluate(X, Y, BATCH_SIZE)
     print("Loss: ", scores_full[0])
     print("Accuracy: ", scores_full[1])
+"""
