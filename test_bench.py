@@ -4,7 +4,7 @@ from keras.models import load_model, Model
 from sklearn.metrics import cohen_kappa_score
 from main import prepare_data, BATCH_SIZE
 
-TRIALS = 10
+TRIALS = 15
 
 print("\nStarting test (" + str(TRIALS) + " trials)\n")
 
@@ -17,7 +17,7 @@ best_acc = 0
 best_kappa = 0
 worst_kappa = 1
 
-classifier = load_model('saved_models/psg_model_2.h5')
+classifier = load_model('saved_models/psg_model.h5')
 
 for _ in range(TRIALS):
     x,y,xt,yt = prepare_data()

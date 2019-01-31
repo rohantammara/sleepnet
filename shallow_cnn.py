@@ -2,21 +2,21 @@ import time
 import numpy as np
 from scipy.io import loadmat
 from sklearn.preprocessing import normalize
-from sklearn.metrics import cohen_kappa_score
 from keras.models import Model, load_model
-from keras.layers import Input, LeakyReLU, Dense, Dropout, Conv1D, MaxPool1D, \
-                         GlobalAvgPool1D, Flatten, BatchNormalization, \
-                         Concatenate
+from keras.layers import *
+from keras.activations import tanh
 from keras.optimizers import Adam
-from keras.constraints import MinMaxNorm
 from keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 from keras.utils import to_categorical
+from customlayers import Repeat
 
 # Parameters
-NUM_EPOCHS = 50
-BATCH_SIZE = 5
+NUM_EPOCHS = 30
+BATCH_SIZE = 10
 LEARNING_RATE = 0.001
-ALPHA = 0.05
+ALPHA = 0.01
+FILTERS = 32
+KERNEL_INIT = "he_uniform"
 
 def prepare_data():
     """
@@ -92,28 +92,37 @@ def network(input_shape):
     input = Input(shape=input_shape)
     norm = BatchNormalization(input_shape=input_shape, center=False, scale=True)(input)
     # Convolution Branch 1
-    a = Conv1D(filters=32, kernel_size=20)(norm)
-    a = LeakyReLU(alpha=ALPHA)(a)
-    a = Conv1D(filters=32, kernel_size=20)(a)
-    a = LeakyReLU(alpha=ALPHA)(a)
+    a = Conv1D(filters=FILTERS, kernel_initializer=KERNEL_INIT, kernel_size=1)(norm)
+    a = ELU(alpha=ALPHA)(a)
+    a = Conv1D(filters=FILTERS, kernel_initializer=KERNEL_INIT, kernel_size=3)(a)
+    a = ELU(alpha=ALPHA)(a)
+    a = Conv1D(filters=FILTERS, kernel_initializer=KERNEL_INIT, kernel_size=5)(a)
+    a = ELU(alpha=ALPHA)(a)
     a = MaxPool1D(pool_size=2)(a)
     a = Dropout(0.2)(a)
     # Convolution Branch 2
-    b = Conv1D(filters=32, kernel_size=10)(norm)
-    b = LeakyReLU(alpha=ALPHA)(b)
-    b = Conv1D(filters=32, kernel_size=10)(b)
-    b = LeakyReLU(alpha=ALPHA)(b)
-    b = MaxPool1D(pool_size=2)(b)
+    b = Conv1D(filters=FILTERS, kernel_initializer=KERNEL_INIT, kernel_size=1)(norm)
+    b = ELU(alpha=ALPHA)(b)
+    b = Conv1D(filters=FILTERS, kernel_initializer=KERNEL_INIT, kernel_size=2)(b)
+    b = ELU(alpha=ALPHA)(b)
+    b = Conv1D(filters=FILTERS, kernel_initializer=KERNEL_INIT, kernel_size=5)(b)
+    b = ELU(alpha=ALPHA)(b)
+    b = MaxPool1D(pool_size=2)(a)
     b = Dropout(0.2)(b)
     # Convolution Branch 3
-    c = Conv1D(filters=32, kernel_size=5)(norm)
-    c = LeakyReLU(alpha=ALPHA)(c)
-    c = Conv1D(filters=32, kernel_size=5)(c)
-    c = LeakyReLU(alpha=ALPHA)(c)
+    c = Conv1D(filters=FILTERS, kernel_initializer=KERNEL_INIT, kernel_size=1)(norm)
+    c = ELU(alpha=ALPHA)(c)
+    c = Conv1D(filters=FILTERS, kernel_initializer=KERNEL_INIT, kernel_size=5)(c)
+    c = ELU(alpha=ALPHA)(c)
     c = MaxPool1D(pool_size=2)(c)
     c = Dropout(0.2)(c)
+    # Pooling Branch
+    d = MaxPool1D(pool_size=4)(norm)
+    d = AvgPool1D(pool_size=2)(d)
+    d = Repeat(n=FILTERS)(d)
+    d = BatchNormalization()(d)
     # Concatenate branches and pool
-    x = Concatenate(axis=1)([a,b,c])
+    x = Concatenate(axis=1)([a,b,c,d])
     x = GlobalAvgPool1D()(x)
     # Output
     output = Dense(6, activation='softmax')(x)
@@ -146,22 +155,23 @@ if __name__ == "__main__":
     train(x,y,xt,yt)
 
     print("\nFinished training in " + str(int(time.time()-start)) + " seconds.")
+    try:
+        classifier = load_model("saved_models/psg_model.h5")
 
-    classifier = load_model("saved_models/psg_model.h5")
+        print("\nFinal evaluation over training samples")
+        scores_train = classifier.evaluate(x, y, BATCH_SIZE)
+        print("Loss: ", scores_train[0])
+        print("Accuracy: ", scores_train[1])
 
-    print("\nFinal evaluation over training samples")
-    scores_train = classifier.evaluate(x, y, BATCH_SIZE)
-    print("Loss: ", scores_train[0])
-    print("Accuracy: ", scores_train[1])
+        print("\nFinal evaluation over test samples")
+        scores_test = classifier.evaluate(xt, yt, BATCH_SIZE)
+        print("Loss: ", scores_test[0])
+        print("Accuracy: ", scores_test[1])
 
-    print("\nFinal evaluation over test samples")
-    scores_test = classifier.evaluate(xt, yt, BATCH_SIZE)
-    print("Loss: ", scores_test[0])
-    print("Accuracy: ", scores_test[1])
-
-    print("\nFinal evaluation over all samples")
-    X = np.concatenate((x, xt), axis=0)
-    Y = np.concatenate((y, yt), axis=0)
-    scores_full = classifier.evaluate(X, Y, BATCH_SIZE)
-    print("Loss: ", scores_full[0])
-    print("Accuracy: ", scores_full[1])
+        print("\nFinal evaluation over all samples")
+        X = np.concatenate((x, xt), axis=0)
+        Y = np.concatenate((y, yt), axis=0)
+        scores_full = classifier.evaluate(X, Y, BATCH_SIZE)
+        print("Loss: ", scores_full[0])
+        print("Accuracy: ", scores_full[1])
+    except
