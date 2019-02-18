@@ -2,11 +2,11 @@ import time
 import numpy as np
 from keras.models import load_model, Model
 from sklearn.metrics import cohen_kappa_score
-from main import prepare_data, BATCH_SIZE
+from deep_cnn_l1 import prepare_data, BATCH_SIZE
 
 TRIALS = 15
 
-print("\nStarting test (" + str(TRIALS) + " trials)\n")
+print("\nStarting test [" + str(TRIALS) + " trials]\n(This might take a while ...)\n")
 
 start = time.time()
 
@@ -17,7 +17,7 @@ best_acc = 0
 best_kappa = 0
 worst_kappa = 1
 
-classifier = load_model('saved_models/psg_model.h5')
+classifier = load_model('saved_models/psg_L1deepmodel_1.h5')
 
 for _ in range(TRIALS):
     x,y,xt,yt = prepare_data()
@@ -51,4 +51,6 @@ print("Mean Accuracy: ", avg_acc)
 print("\nCohen's Kappa Score")
 print("Best k: ", best_kappa)
 print("Worst k: ", worst_kappa)
-print("\nfinished in " + str(int(time.time()-start)) + " seconds")
+
+T = int(time.time()-start)
+print("\nFinished validating in " + str(int(T/60)) + " minutes and " + str(T%60) + " seconds.")
