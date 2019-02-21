@@ -2,7 +2,7 @@ import time
 import numpy as np
 from keras.models import load_model, Model
 from sklearn.metrics import cohen_kappa_score
-from deep_cnn_l1 import prepare_data, BATCH_SIZE
+from deep_cnn_l2 import prepare_data, BATCH_SIZE
 
 TRIALS = 15
 
@@ -17,7 +17,7 @@ best_acc = 0
 best_kappa = 0
 worst_kappa = 1
 
-classifier = load_model('saved_models/psg_L1deepmodel_1.h5')
+classifier = load_model('saved_models/psg_L2deepmodel.h5')
 
 for _ in range(TRIALS):
     x,y,xt,yt = prepare_data()

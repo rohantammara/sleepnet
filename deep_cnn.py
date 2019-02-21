@@ -104,9 +104,6 @@ def network(input_shape):
     z = Conv1D(filters=FILTERS, kernel_size=5, activation='tanh')(c)
     z = MaxPool1D(pool_size=2)(z)
     # Conv Skip
-    #s = LeakyReLU(alpha=ALPHA)(c)
-    #s = Dense(FILTERS)(s)
-    #s = Dropout(0.2)(s)
     s = c
     # Concatentate
     c = Concatenate(axis=1)([x,y,z])

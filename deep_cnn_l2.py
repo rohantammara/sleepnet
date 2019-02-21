@@ -35,7 +35,7 @@ def prepare_data():
                    np.array(loadmat('psg_db/slp03m.mat')['val'])[CH][:997500],
                    np.array(loadmat('psg_db/slp04m.mat')['val'])[CH][:997500],
                    np.array(loadmat('psg_db/slp14m.mat')['val'])[CH][45000:540000],
-                   np.array(loadmat('psg_db/slp14m.mat')['val'])[CH][547500:997500],
+                    np.array(loadmat('psg_db/slp14m.mat')['val'])[CH][547500:997500],
                    np.array(loadmat('psg_db/slp16m.mat')['val'])[CH][195000:997500],
                    np.array(loadmat('psg_db/slp32m.mat')['val'])[CH][:997500],
                    np.array(loadmat('psg_db/slp37m.mat')['val'])[CH][15000:997500],
@@ -54,17 +54,18 @@ def prepare_data():
     # Load annotations as labels
     annotations = open('psg_db/annotations.txt').readlines()
     Y = []
-
+    wr_mask = []
     for i in range(M):
         stage = annotations[i].split('\t')[1][0]
-        if stage == 'W':
-            stage = 0;
-        elif stage == 'R':
-            stage = 2
+        if stage == 'W' or stage == 'R':
+            wr_mask.append(i)
+            stage = 4
         else:
-            stage = 1
+            stage = int(stage)-1
         Y.append(stage)
-
+    X = np.delete(X, wr_mask, axis=0)
+    Y = np.delete(Y, wr_mask)
+    M = len(X)
     Y = to_categorical(Y)
 
     # Shuffle data
@@ -104,9 +105,6 @@ def network(input_shape):
     z = Conv1D(filters=FILTERS, kernel_size=5, activation='tanh')(c)
     z = MaxPool1D(pool_size=2)(z)
     # Conv Skip
-    #s = LeakyReLU(alpha=ALPHA)(c)
-    #s = Dense(FILTERS)(s)
-    #s = Dropout(0.2)(s)
     s = c
     # Concatentate
     c = Concatenate(axis=1)([x,y,z])
@@ -121,7 +119,7 @@ def network(input_shape):
     x = Dropout(0.2)(x)
     # Output
     x = GlobalAvgPool1D()(x)
-    output = Dense(3, activation='softmax')(x)
+    output = Dense(4, activation='softmax')(x)
 
     model = Model(inputs=[input], outputs=[output])
 
